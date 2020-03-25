@@ -1,9 +1,10 @@
 {
-  "name": "",
-  "version": "0.0.1",
-  "description": "",
+  "name": "obs-parser",
+  "version": "0.0.2",
+  "description": "data parser",
   "keywords": [
-    
+    "obs",
+    "parser"
   ],
   "main": "./bundles/index.umd.js",
   "module": "./esm5/index.js",
@@ -12,7 +13,7 @@
   "sideEffects": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/jincdream/selector"
+    "url": "https://github.com/jincdream/obs-parser"
   },
   "author": "jinc.cjc <jinc.cjc@alibaba-inc.com>",
   "license": "MIT",
@@ -74,17 +75,16 @@
   "peerDependencies": {
     "tslib": ">=1.9.0"
   },
-  "dependencies": {
-    
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@types/json5": "0.0.30",
     "@commitlint/cli": "7.2.1",
     "@commitlint/config-conventional": "7.1.2",
     "@types/jest": "23.3.10",
+    "@types/json5": "0.0.30",
     "@types/lodash.clonedeepwith": "4.5.6",
     "@types/node": "8.10.*",
     "@types/prettier": "1.15.2",
+    "@types/prompts": "^2.0.5",
     "@types/webpack-config-utils": "2.3.0",
     "brotli-size": "0.0.3",
     "commitizen": "3.0.5",
