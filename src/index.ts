@@ -13,11 +13,11 @@ export interface IData {
   [key: string]: any
 }
 
-export interface IComponentRenderDO<AllComponents> {
+export interface IComponentRenderDO<AllComponents, Components> {
   id: keyof AllComponents
-  n: string
+  n: keyof Components
   d: object
-  childrens: (IComponentRenderDO<AllComponents>)[] | []
+  childrens: (IComponentRenderDO<AllComponents, Components>)[] | []
 }
 
 export type Structure<T> = { [P in keyof T]: Array<keyof T> }
@@ -47,14 +47,14 @@ function getComponent<ComponentsData extends Base, AllComponents extends Base>(
   structure: Structure<AllComponents>,
   componentDetail: ComponentDetail<ComponentsData>,
   cData: ComponentData<AllComponents>
-): IComponentRenderDO<AllComponents> {
+): IComponentRenderDO<AllComponents, ComponentsData> {
   let name = getComponentName<AllComponents>(componentId)
   let childrens = structure[componentId] || []
   let fieldData = (cData[componentId] || { fields: {} }) as FiledData<IData>
   let commonData = componentDetail[name]
   let { id: cid, status, resource, type, ..._componentData } = fieldData.fields
 
-  let component: IComponentRenderDO<AllComponents> = {
+  let component: IComponentRenderDO<AllComponents, ComponentsData> = {
     id: componentId,
     n: name,
     d: Object.assign({}, commonData, _componentData),
