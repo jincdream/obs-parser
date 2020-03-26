@@ -7,7 +7,7 @@ import {
   FiledData,
   IData,
   IComponentRenderDO,
-} from './index.d'
+} from '../scripts/types.d'
 
 function getComponentName<AllComponents>(id: keyof AllComponents) {
   return id.toString().split('$')[0]
