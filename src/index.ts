@@ -16,7 +16,10 @@ export interface IData {
 export interface IComponentRenderDO<AllComponents, Components> {
   id: keyof AllComponents
   n: keyof Components
-  d: object
+  d: {
+    style?: object
+    [key: string]: any
+  }
   childrens: (IComponentRenderDO<AllComponents, Components>)[] | []
 }
 
