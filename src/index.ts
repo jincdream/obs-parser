@@ -1,7 +1,43 @@
 export type Base = { [key: string]: object }
 export type ComponentDetail<T extends Base> = { [P in keyof T]?: T[P] }
 export type ComponentData<T> = { [P in keyof T]?: FiledData<T[P]> }
+export type EffectHandle = {
+  /**
+   * onChnage
+   */
+  trigger?: string
+  /**
+   * $state.type === 'content'
+   * $state：当前组件的state
+   * $value：trigger的回调值
+   */
+  condition?: string
+  handle?: {
+    /**
+     * uid
+     */
+    targetUid: string
+    type: 'get' | 'set' | 'visible'
+    value?: {
+      /**
+       * key: "$value"
+       */
+      [key: string]: string
+    }
+  }
+}
+export type Effect = {
+  /**
+   * componentId
+   */
+  uid?: string
+  effects?: EffectHandle[]
+}
 export type FiledData<T> = {
+  effect?: {
+    enble: boolean
+    handles?: EffectHandle[]
+  }
   fields: T
 }
 
@@ -16,6 +52,7 @@ export interface IData {
 export interface IComponentRenderDO<AllComponents, Components> {
   id: keyof AllComponents
   n: keyof Components
+  e?: Effect
   d: {
     style?: object
     [key: string]: any
@@ -55,8 +92,8 @@ function getComponent<ComponentsData extends Base, AllComponents extends Base>(
   let childrens = structure[componentId] || []
   let fieldData = (cData[componentId] || { fields: {} }) as FiledData<IData>
   let commonData = componentDetail[name]
-  let { id: cid, status, resource, type, ..._componentData } = fieldData.fields
-
+  let { effect, fields } = fieldData
+  let { id: cid, status, resource, type, ..._componentData } = fields
   let component: IComponentRenderDO<AllComponents, ComponentsData> = {
     id: componentId,
     n: name,
@@ -70,7 +107,12 @@ function getComponent<ComponentsData extends Base, AllComponents extends Base>(
       )
     ),
   }
-
+  if (effect && effect.enble) {
+    component.e = {
+      uid: componentId as string,
+      effects: effect.handles,
+    }
+  }
   return component
 }
 export default function OBS_DataParser<
