@@ -92,7 +92,7 @@ function getComponent<ComponentsData extends Base, AllComponents extends Base>(
   let childrens = structure[componentId] || []
   let fieldData = (cData[componentId] || { fields: {} }) as FiledData<IData>
   let commonData = componentDetail[name]
-  let { effect, fields } = fieldData
+  let { effect, fields = {} } = fieldData
   let { id: cid, status, resource, type, ..._componentData } = fields
   let component: IComponentRenderDO<AllComponents, ComponentsData> = {
     id: componentId,
