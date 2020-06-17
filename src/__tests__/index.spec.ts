@@ -1,17 +1,6 @@
-// jest.mock('../environment.ts', () => ({
-//   IS_DEV: true,
-//   IS_PROD: false,
-// }))
-
 import Parser from '../index'
 
 describe(`Parse`, () => {
-  // let greeter: Greeter
-
-  // beforeEach(() => {
-  //   greeter = new Greeter('World')
-  // })
-
   it(`simple`, () => {
     let data = Parser<{ a: object; b: object }, { a$1: object; b$2: object }>({
       data: {
@@ -136,15 +125,76 @@ describe(`Parse`, () => {
       },
     ])
   })
+  it(`effectFields`, () => {
+    let data = Parser<
+      { a: object },
+      {
+        a$1: {
+          visible: boolean
+        }
+        b$1: {
+          count: number
+        }
+        c$1: {
+          page: number
+        }
+      }
+    >({
+      data: {
+        a$1: {
+          effectFileds: {
+            visible: '$Context.b$1.count > $Context.c$1.page',
+          },
+        },
+        b$1: {
+          fields: {
+            count: 0,
+          },
+        },
+        c$1: {
+          fields: {
+            page: 0,
+          },
+        },
+      },
+      hierarchy: {
+        root: 'a$1',
+        structure: {
+          a$1: ['b$1'],
+          b$1: ['c$1'],
+          c$1: [],
+        },
+      },
+    })
 
-  // it(`should greet and print deprecation message if in dev mode`, () => {
-  //   const spyWarn = jest.spyOn(console, 'warn')
-  //   const actual = greeter.greetMe()
-  //   const expected = 'Hello, World!'
-
-  //   expect(actual).toBe(expected)
-  //   expect(spyWarn).toHaveBeenCalledWith(
-  //     'this method is deprecated, use #greet instead'
-  //   )
-  // })
+    expect(data).toEqual([
+      {
+        id: 'a$1',
+        n: 'a',
+        d: {},
+        l: [
+          {
+            exp: '$Context.b$1.count > $Context.c$1.page',
+            deps: ['b$1', 'c$1'],
+            target: 'visible',
+          },
+        ],
+        childrens: [
+          {
+            id: 'b$1',
+            n: 'b',
+            d: { count: 0 },
+            childrens: [
+              {
+                id: 'c$1',
+                n: 'c',
+                d: { page: 0 },
+                childrens: [],
+              },
+            ],
+          },
+        ],
+      },
+    ])
+  })
 })

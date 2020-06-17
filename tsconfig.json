@@ -7,6 +7,7 @@
       "dom",
       "es2018"
     ],
+    "keyofStringsOnly": true,
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
