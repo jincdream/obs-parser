@@ -142,7 +142,7 @@ describe(`Parse`, () => {
     >({
       data: {
         a$1: {
-          effectFileds: {
+          effectFields: {
             visible: '$Context.b$1.count > $Context.c$1.page',
           },
         },

@@ -2,7 +2,7 @@ type Record<T extends object> = { [P in keyof T]: string }
 export type Base = { [key: string]: object }
 export type ComponentDetail<T extends Base> = { [P in keyof T]?: T[P] }
 export type ComponentData<T> = {
-  [P in keyof T]?: FiledData<T[P], EffectFileds<T>>
+  [P in keyof T]?: FiledData<T[P], EffectFields<T>>
 }
 export type EffectHandle = {
   /**
@@ -41,7 +41,7 @@ export type FiledData<T, E> = {
     enble: boolean
     handles?: EffectHandle[]
   }
-  effectFileds?: E
+  effectFields?: E
   fields?: T
 }
 
@@ -53,7 +53,7 @@ export interface IData {
   [key: string]: any
 }
 
-export type EffectFileds<C> = { [P in keyof C[keyof C]]: string }
+export type EffectFields<C> = { [P in keyof C[keyof C]]: string }
 export interface IComponentRenderDO<AllComponents, ComponentsData> {
   // componentName$id
   id: keyof AllComponents
@@ -97,11 +97,11 @@ function prop<T, K extends keyof T>(obj: T, key: K) {
   return obj[key]
 }
 function effectParser<O, U extends keyof O[keyof O]>(
-  effectFileds: EffectFileds<O>
+  effectFields: EffectFields<O>
 ) {
   let linkages: Linkages<U> = []
-  Object.keys(effectFileds).forEach((target) => {
-    let exp: string = prop<EffectFileds<O>, any>(effectFileds, target)
+  Object.keys(effectFields).forEach((target) => {
+    let exp: string = prop<EffectFields<O>, any>(effectFields, target)
     let deps: Array<U> = []
     // 依赖提取
     exp.replace(/\$Context\.(\S*)/gim, (m, name: string) => {
@@ -133,10 +133,10 @@ function getComponent<ComponentsData extends Base, AllComponents extends Base>(
   let childrens = structure[componentId] || []
   let fieldData = (cData[componentId] || { fields: {} }) as FiledData<
     IData,
-    EffectFileds<ComponentsData>
+    EffectFields<ComponentsData>
   >
   let commonData = componentDetail ? componentDetail[name] : {}
-  let { effect, fields = {}, effectFileds } = fieldData
+  let { effect, fields = {}, effectFields } = fieldData
   let { id: cid, status, resource, type, ..._componentData } = fields
   let component: IComponentRenderDO<AllComponents, ComponentsData> = {
     id: componentId,
@@ -151,11 +151,11 @@ function getComponent<ComponentsData extends Base, AllComponents extends Base>(
       )
     ),
   }
-  if (effectFileds) {
+  if (effectFields) {
     component.l = effectParser<
       ComponentsData,
       keyof ComponentsData[keyof ComponentsData]
-    >(effectFileds)
+    >(effectFields)
   }
   if (effect && effect.enble) {
     component.e = {
