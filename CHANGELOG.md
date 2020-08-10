@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.5.0"></a>
+# [0.5.0](https://github.com/jincdream/obs-parser/compare/v0.4.3...v0.5.0) (2020-08-10)
+
+
+### Features
+
+* file props ([48dff73](https://github.com/jincdream/obs-parser/commit/48dff73))
+* script fields ([1ec57e3](https://github.com/jincdream/obs-parser/commit/1ec57e3))
+* script fields ([a030b31](https://github.com/jincdream/obs-parser/commit/a030b31))
+
+
+
 <a name="0.4.3"></a>
 ## [0.4.3](https://github.com/jincdream/obs-parser/compare/v0.4.1...v0.4.3) (2020-06-22)
 
