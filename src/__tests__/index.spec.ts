@@ -197,37 +197,38 @@ describe(`Parse`, () => {
       },
     ])
   })
-  it(`scriptFields`, ()=>{
+  it(`scriptFields`, () => {
     let data = Parser<
       { a: object },
       {
         a$1: {
           count: number
         }
-      }>({
-        data: {
-          a$1: {
-            scriptFields:{
-              count: "1"
-            }
-          }
+      }
+    >({
+      data: {
+        a$1: {
+          scriptFields: {
+            count: '1',
+          },
         },
-        hierarchy:{
-          root: "a$1",
-          structure: {
-            "a$1":[]
-          }
-        }
-      })
-      expect(data).toEqual([
+      },
+      hierarchy: {
+        root: 'a$1',
+        structure: {
+          a$1: [],
+        },
+      },
+    })
+    expect(data).toEqual([
       {
         id: 'a$1',
         n: 'a',
         d: {},
         s: {
-          count: "1"
-        }
-      }
-      ])
+          count: '1',
+        },
+      },
+    ])
   })
 })
