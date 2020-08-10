@@ -2,7 +2,7 @@ type Record<T extends object> = { [P in keyof T]: string }
 export type Base = { [key: string]: object }
 export type ComponentDetail<T extends Base> = { [P in keyof T]?: T[P] }
 export type ComponentData<T> = {
-  [P in keyof T]?: FiledData<T[P], EffectFields<T>>
+  [P in keyof T]?: FiledData<T[P], EffectFields<T>, EffectFields<T>>
 }
 export type EffectHandle = {
   /**
@@ -36,12 +36,13 @@ export type Effect = {
   uid?: string
   effects?: EffectHandle[]
 }
-export type FiledData<T, E> = {
+export type FiledData<T, E, S> = {
   effect?: {
     enble: boolean
     handles?: EffectHandle[]
   }
   effectFields?: E
+  scriptFields?: S
   fields?: T
 }
 
@@ -54,7 +55,10 @@ export interface IData {
 }
 
 export type EffectFields<C> = { [P in keyof C[keyof C]]: string }
-export interface IComponentRenderDO<AllComponents, ComponentsData> {
+export interface IComponentRenderDO<
+  AllComponents,
+  ComponentsData extends { style?: object }
+> {
   // componentName$id
   id: keyof AllComponents
   // componentName
@@ -62,10 +66,8 @@ export interface IComponentRenderDO<AllComponents, ComponentsData> {
   e?: Effect
   // effect data
   l?: Linkages<keyof ComponentsData[keyof ComponentsData]>
-  d: {
-    style?: object
-    [key: string]: any
-  }
+  s?: EffectFields<ComponentsData>
+  d: Partial<ComponentsData>
   childrens: (IComponentRenderDO<AllComponents, ComponentsData>)[] | []
 }
 
@@ -133,15 +135,18 @@ function getComponent<ComponentsData extends Base, AllComponents extends Base>(
   let childrens = structure[componentId] || []
   let fieldData = (cData[componentId] || { fields: {} }) as FiledData<
     IData,
+    EffectFields<ComponentsData>,
     EffectFields<ComponentsData>
   >
   let commonData = componentDetail ? componentDetail[name] : {}
-  let { effect, fields = {}, effectFields } = fieldData
+  let { effect, fields = {}, effectFields, scriptFields } = fieldData
   let { id: cid, status, resource, type, ..._componentData } = fields
   let component: IComponentRenderDO<AllComponents, ComponentsData> = {
     id: componentId,
     n: name,
-    d: Object.assign({}, { ...commonData }, _componentData),
+    d: Object.assign({}, { ...commonData }, _componentData as Partial<
+      ComponentsData
+    >),
     childrens: childrens.map((c) =>
       getComponent<ComponentsData, AllComponents>(
         c,
@@ -156,6 +161,9 @@ function getComponent<ComponentsData extends Base, AllComponents extends Base>(
       ComponentsData,
       keyof ComponentsData[keyof ComponentsData]
     >(effectFields)
+  }
+  if (scriptFields) {
+    component.s = { ...scriptFields }
   }
   if (effect && effect.enble) {
     component.e = {
